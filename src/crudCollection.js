@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import _ from 'lodash'; // redux is already using
+import { find } from 'lodash';
 
 import actionTypesFor from 'utils/actionTypesFor';
 import crudItem from 'utils/crudItem';
@@ -45,7 +45,7 @@ export default function crudCollection(forType) {
       return state.filter(s => action.items.indexOf(s.data.id) === -1);
     case actions.updateSuccess:
       return state.map(s => {
-        const update = _.find(action.items, { cid: s.cid });
+        const update = find(action.items, { cid: s.cid });
         return (update) ? crudItem(forType)(s, { ...action, ...update.update }) : s;
       });
     default:

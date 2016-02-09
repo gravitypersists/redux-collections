@@ -1,8 +1,6 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -11,8 +9,6 @@ exports.default = crudCollection;
 var _redux = require('redux');
 
 var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
 
 var _actionTypesFor = require('utils/actionTypesFor');
 
@@ -84,7 +80,7 @@ function crudCollection(forType) {
         });
       case actions.updateSuccess:
         return state.map(function (s) {
-          var update = _lodash2.default.find(action.items, { cid: s.cid });
+          var update = (0, _lodash.find)(action.items, { cid: s.cid });
           return update ? (0, _crudItem2.default)(forType)(s, _extends({}, action, update.update)) : s;
         });
       default:
