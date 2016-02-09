@@ -1,7 +1,7 @@
-import actionTypesFor from 'src/actionTypesFor'
-import actionCreatorsFor from 'src/actionCreatorsFor'
-import crudCollection from 'src/crudCollection'
-import crudItem from 'src/crudItem'
+import actionTypesFor from './actionTypesFor'
+import actionCreatorsFor from './actionCreatorsFor'
+import crudCollection from './crudCollection'
+import crudItem from './crudItem'
 
 export default {
   actionTypesFor,

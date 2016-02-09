@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import actionTypesFor from 'utils/actionTypesFor';
+import actionTypesFor from './actionTypesFor';
 
 let currentClientID = 0;
 

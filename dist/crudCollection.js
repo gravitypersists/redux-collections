@@ -10,17 +10,17 @@ var _redux = require('redux');
 
 var _lodash = require('lodash');
 
-var _actionTypesFor = require('utils/actionTypesFor');
+var _actionTypesFor = require('./actionTypesFor');
 
 var _actionTypesFor2 = _interopRequireDefault(_actionTypesFor);
 
-var _crudItem = require('utils/crudItem');
+var _crudItem = require('./crudItem');
 
 var _crudItem2 = _interopRequireDefault(_crudItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } // redux is already using
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function crudCollection(forType) {
   var actions = (0, _actionTypesFor2.default)(forType);

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import { find } from 'lodash';
 
-import actionTypesFor from 'utils/actionTypesFor';
-import crudItem from 'utils/crudItem';
+import actionTypesFor from './actionTypesFor';
+import crudItem from './crudItem';
 
 export default function crudCollection(forType) {
   const actions = actionTypesFor(forType);

@@ -8,7 +8,7 @@ exports.default = crudItem;
 
 var _redux = require('redux');
 
-var _actionTypesFor = require('utils/actionTypesFor');
+var _actionTypesFor = require('./actionTypesFor');
 
 var _actionTypesFor2 = _interopRequireDefault(_actionTypesFor);
 
