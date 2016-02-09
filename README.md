@@ -59,12 +59,12 @@ Updating is the part of this project that will likely change the most, because o
 Currently, you should batch your updates up by data model `cid`s. Like so:
 
 ```javascript
-dispatch(updateSuccess({
+dispatch(updateSuccess([
   {
     cid: 9,
     update: { name: 'Kitty' }
   }
-}))
+]))
 ```
 
 What this will do is find the data entry in the collection by the cid and overwrite it with the contents of `update`.
