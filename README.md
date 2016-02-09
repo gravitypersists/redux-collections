@@ -34,6 +34,11 @@ In this case, the response.items is assumed to be an array. `fetchSuccess` will 
   }
 ```
 
+### Compile
+
+`npm run compile`
+
 ### TODO
 
 extend custom reducer functions
+get shit done
