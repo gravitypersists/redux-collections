@@ -8,7 +8,7 @@ export default function crudCollection(forType, options = {}) {
   const crudItem = crudItemFor(forType)
 
   const unique = (items) => {
-    return options.uniqueBy ? uniqBy(items, options.uniqueBy) : items;
+    return options.uniqueBy ? uniqBy(items, (i) => i.data[options.uniqueBy]) : items;
   }
 
   const mergeNew = (oldItems, newItems) => {
