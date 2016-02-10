@@ -54,9 +54,18 @@ export default function crudCollection(forType, options = {}) {
           return action.items.indexOf(filterOut) === -1
         });
       case actions.updateSuccess:
+        if (action.items.length === 0) return state;
+        const cruddy = action.items[0].__cruddy;
         return state.map(s => {
-          const update = find(action.items, { cid: s.cid });
-          return (update) ? crudItem(s, { ...action, ...update.update }) : s;
+          if (cruddy) {
+            const itemUpdate = find(action.items, { cid: s.cid });
+            if (!itemUpdate) return s;
+            return crudItem(s, { ...action, update: itemUpdate.data });
+          } else {
+            const dataUpdate = find(action.items, (i) => i.data[options.uniqueBy]);
+            if (!dataUpdate) return s;
+            return crudItem(s, { ...action, update: dataUpdate });
+          }
         });
       default:
         return state.map(s => crudItem(s, action));

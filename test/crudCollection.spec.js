@@ -356,7 +356,7 @@ describe('Updating', () => {
 
     })
 
-    describe('when an array of item.datas is given', () => {
+    xdescribe('when an array of item.datas is given', () => {
 
       it('sets the status of the item to "success"', () => {
         const firstData = store.getState().items[0].data

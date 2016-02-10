@@ -17,7 +17,7 @@ export default function crudItem(forType) {
   const dataReducer = (state = {}, action = {}) => {
     switch (action.type) {
       case actions.updateSuccess:
-        return { ...state, ...action.update }
+        return action.update;
       default:
         return state;
     }
@@ -26,6 +26,7 @@ export default function crudItem(forType) {
   return combineReducers({
     status: statusReducer,
     data: dataReducer,
-    cid: (s = currentClientID++) => s
+    cid: (s = currentClientID++) => s,
+    __cruddy: (s = true) => s
   });
 }
