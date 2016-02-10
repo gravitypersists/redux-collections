@@ -1,5 +1,6 @@
 import expect from 'expect'
 import { createStore } from 'redux'
+import { last } from 'lodash'
 
 import crudCollection from '../src/crudCollection'
 import actionCreatorsFor from '../src/actionCreatorsFor'
@@ -114,6 +115,47 @@ describe('Fetching', () => {
       store.dispatch(testActions.fetchFailed('fuckkkkk'))
       const afterLength = store.getState().items.length
       expect(beforeLength).toEqual(afterLength)
+    })
+
+  })
+
+})
+
+describe('Creating', () => {
+  let reducer, store
+
+  before(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+  })
+
+  describe('Start', () => {
+
+    xit('does do optimistic updates if provided things', () => {
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
+      const afterLength = store.getState().items.length
+      expect(beforeLength + 3).toEqual(afterLength)
+    })
+
+    it('does not create optimistic items if provided nothing', () => {
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.createStart())
+      const afterLength = store.getState().items.length
+      expect(beforeLength).toEqual(afterLength)
+    })
+
+    it('does not create optimistic items if no uniqueness parameter is set', () => {
+      const nonUniqueStore = createStore(crudCollection('test', { uniqueBy: 'id' }))
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
+      const afterLength = store.getState().items.length
+      expect(beforeLength + 3).toNotEqual(afterLength)
+    })
+
+    xit('sets the status of optimistic items to "pending"', () => {
+      store.dispatch(testActions.createStart([{ one:1 }]))
+      expect(last(store.getState().items).status).toEqual('pending')
     })
 
   })
