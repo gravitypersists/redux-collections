@@ -6,7 +6,7 @@ import actionCreatorsFor from '../src/actionCreatorsFor'
 
 const testActions = actionCreatorsFor('test')
 
-describe('Fetching', () => {
+describe('Initialize', () => {
   let reducer, store
 
   before(() => {
@@ -14,20 +14,26 @@ describe('Fetching', () => {
     store = createStore(reducer)
   })
 
-  describe('Initialize', () => {
+  it('does not inject anything before use', () => {
+    expect(store.getState().items).toEqual([])
+  })
 
-    it('does not inject anything before use', () => {
-      expect(store.getState().items).toEqual([])
-    })
+  it('has error set to null', () => {
+    expect(store.getState().error).toEqual(null)
+  })
 
-    it('has error set to null', () => {
-      expect(store.getState().error).toEqual(null)
-    })
+  it('has status set to "success"', () => {
+    expect(store.getState().status).toEqual('success')
+  })
 
-    it('has status set to "success"', () => {
-      expect(store.getState().status).toEqual('success')
-    })
+})
 
+describe('Fetching', () => {
+  let reducer, store
+
+  before(() => {
+    reducer = crudCollection('test')
+    store = createStore(reducer)
   })
 
   describe('Start', () => {
