@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
-    "compile": "BABEL_ENV=commonjs babel src --out-dir dist"
+    "compile": "BABEL_ENV=commonjs babel src --out-dir dist",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
