@@ -7,8 +7,12 @@ import actionCreatorsFor from '../src/actionCreatorsFor'
 const testActions = actionCreatorsFor('test')
 
 describe('Fetching', () => {
-  const reducer = crudCollection('test')
-  const store = createStore(reducer)
+  let reducer, store
+
+  before(() => {
+    reducer = crudCollection('test')
+    store = createStore(reducer)
+  })
 
   describe('Initialize', () => {
 
@@ -107,6 +111,5 @@ describe('Fetching', () => {
     })
 
   })
-
 
 })
