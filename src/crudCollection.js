@@ -4,10 +4,10 @@ import { find, uniqBy } from 'lodash';
 import actionTypesFor from './actionTypesFor';
 import crudItem from './crudItem';
 
-export default function crudCollection(forType, options) {
+export default function crudCollection(forType, options = {}) {
 
   const unique = (items) => {
-    options.uniqueBy ? uniqBy(items, options.uniqueBy) : items;
+    return options.uniqueBy ? uniqBy(items, options.uniqueBy) : items;
   }
 
   const mergeNew = (oldItems, newItems) => {
@@ -46,7 +46,7 @@ export default function crudCollection(forType, options) {
     switch (action.type) {
       case actions.createSuccess:
       case actions.fetchSuccess:
-        return unique(merge(action.items, state)).map(s => crudItem(forType)(s, action));
+        return unique(mergeNew(action.items, state)).map(s => crudItem(forType)(s, action));
       case actions.deleteSuccess:
         const filterOut = (options.uniqueBy) ? s.data[uniqueBy] : s.cid;
         return state.filter(s => action.items.indexOf(s.data.id) === -1);
