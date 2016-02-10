@@ -84,5 +84,29 @@ describe('Fetching', () => {
 
   })
 
+  describe('Failure', () => {
+
+    before(() => {
+      store.dispatch(testActions.fetchStart())
+      store.dispatch(testActions.fetchFailed('fuck'))
+    })
+
+    xit('sets status to "error"', () => {
+      expect(store.getState().status).toEqual('error')
+    })
+
+    xit('sets the value of error to the fuck', () => {
+      expect(store.getState().error).toEqual('fuck')
+    })
+
+    it('does not change the current items', () => {
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.fetchFailed('fuckkkkk'))
+      const afterLength = store.getState().items.length
+      expect(beforeLength).toEqual(afterLength)
+    })
+
+  })
+
 
 })
