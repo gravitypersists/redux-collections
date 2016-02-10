@@ -201,7 +201,7 @@ describe('Creating', () => {
 })
 
 describe('Deleting', () => {
-  let reducer, store, x
+  let reducer, store
 
   beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
@@ -262,6 +262,134 @@ describe('Deleting', () => {
         expect(deletedItem).toBe(undefined)
       })
 
+    })
+
+  })
+
+  describe('Error', () => {
+
+    xit('?????', () => {
+      expect('a test').toBe('written')
+    })
+
+  })
+
+})
+
+
+describe('Updating', () => {
+  let reducer, store
+
+  beforeEach(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+  })
+
+  describe('Start', () => {
+
+    xdescribe('when an array of items is given', () => {
+
+      describe('when optimistic is not set to true', () => {
+
+        it('sets the status of the item to "pending"', () => {
+          store.dispatch(testActions.updateStart([{ id: 1 }]))
+          const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
+          expect(updatedItem.status).toEqual('pending')
+        })
+
+        it('does not modify the data model yet', () => {
+          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
+          const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
+          expect(updatedItem.data.modified).toEqual(undefined)
+        })
+
+      })
+
+      describe('when optimistic is set to true', () => {
+
+        it('sets the status of the item to "pending"', () => {
+          store.dispatch(testActions.updateStart([{ id: 1 }]))
+          const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
+          expect(updatedItem.status).toEqual('pending')
+        })
+
+        it('modifies the data model', () => {
+          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
+          const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
+          expect(updatedItem.data.modified).toEqual(true)
+        })
+
+      })
+
+    })
+
+  })
+
+  describe('Success', () => {
+
+    describe('when an array of items is given', () => {
+
+      it('sets the status of the item to "success"', () => {
+        const firstItem = store.getState().items[0]
+        store.dispatch(testActions.updateSuccess([firstItem]))
+        const updatedItem = find(store.getState().items, { cid: firstItem.cid })
+        expect(updatedItem.status).toEqual('success')
+      })
+
+      it('modifies the data model', () => {
+        const firstItem = store.getState().items[0]
+        const newData = { id: firstItem.data.id, modified: true }
+        store.dispatch(testActions.updateSuccess([{ ...firstItem, data: newData }]))
+        const updatedItem = find(store.getState().items, { cid: firstItem.cid })
+        expect(updatedItem.data.modified).toEqual(true)
+      })
+
+      it('overwrites the data model', () => {
+        const firstItem = store.getState().items[0]
+        const newData = { id: firstItem.data.id, notOverwritten: true }
+        store.dispatch(testActions.updateSuccess([{ ...firstItem, data: newData }]))
+        store.dispatch(testActions.updateSuccess([firstItem]))
+        const updatedItem = find(store.getState().items, { cid: firstItem.cid })
+        expect(updatedItem.data.notOverwritten).toEqual(undefined)
+      })
+
+    })
+
+    describe('when an array of item.datas is given', () => {
+
+      it('sets the status of the item to "success"', () => {
+        const firstData = store.getState().items[0].data
+        store.dispatch(testActions.updateSuccess([firstData]))
+        const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
+        expect(updatedItem.status).toEqual('success')
+      })
+
+      it('modifies the data model', () => {
+        const firstData = store.getState().items[0].data
+        const newData = { ...firstData, modified: true }
+        store.dispatch(testActions.updateSuccess([newData]))
+        const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
+        expect(updatedItem.data.modified).toEqual(true)
+      })
+
+      it('overwrites the data model', () => {
+        const firstData = store.getState().items[0].data
+        const newData = { ...firstData, notOverwritten: true }
+        store.dispatch(testActions.updateSuccess([newData]))
+        store.dispatch(testActions.updateSuccess([firstData]))
+        const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
+        expect(updatedItem.data.notOverwritten).toEqual(undefined)
+      })
+
+    })
+
+  })
+
+  describe('Error', () => {
+
+    xit('?????', () => {
+      expect('a test').toBe('written')
     })
 
   })
