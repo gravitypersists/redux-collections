@@ -1,6 +1,6 @@
 import expect from 'expect'
 import { createStore } from 'redux'
-import { last } from 'lodash'
+import { last, find, filter } from 'lodash'
 
 import crudCollection from '../src/crudCollection'
 import actionCreatorsFor from '../src/actionCreatorsFor'
@@ -124,14 +124,14 @@ describe('Fetching', () => {
 describe('Creating', () => {
   let reducer, store
 
-  before(() => {
+  beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
     store = createStore(reducer)
   })
 
   describe('Start', () => {
 
-    xit('does do optimistic updates if provided things', () => {
+    xit('creates optimistic items if provided things', () => {
       const beforeLength = store.getState().items.length
       store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
       const afterLength = store.getState().items.length
@@ -147,15 +147,40 @@ describe('Creating', () => {
 
     it('does not create optimistic items if no uniqueness parameter is set', () => {
       const nonUniqueStore = createStore(crudCollection('test', { uniqueBy: 'id' }))
-      const beforeLength = store.getState().items.length
+      const beforeLength = nonUniqueStore.getState().items.length
       store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
-      const afterLength = store.getState().items.length
+      const afterLength = nonUniqueStore.getState().items.length
       expect(beforeLength + 3).toNotEqual(afterLength)
     })
 
     xit('sets the status of optimistic items to "pending"', () => {
       store.dispatch(testActions.createStart([{ one:1 }]))
       expect(last(store.getState().items).status).toEqual('pending')
+    })
+
+  })
+
+  describe('Success', () => {
+
+    it('creates new items', () => {
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+      const afterLength = store.getState().items.length
+      expect(beforeLength + 3).toEqual(afterLength)
+    })
+
+    it('creates new items with status of "success"', () => {
+      const beforeLength = store.getState().items.length
+      store.dispatch(testActions.createSuccess([{ id:10 }]))
+      expect(last(store.getState().items).status).toEqual('success')
+    })
+
+    xit('overwrites items that match on uniqueness parameter', () => {
+      store.dispatch(testActions.createSuccess([{ id:100, second: false }]))
+      store.dispatch(testActions.createSuccess([{ id:100, second: true }]))
+      const items = filter(store.getState().items, i => i.data.id === 100)
+      expect(items.length).toEqual(1)
+      expect(items[0].data.second).toEqual(true)
     })
 
   })
