@@ -1,5 +1,6 @@
 # redux-crud-collections
 
+A set of standard reducers and actions for CRUD items. Inspired a little bit by [redux-crud](https://github.com/Versent/redux-crud) but does not use an immutable library and offers an ancestor in your state nodes for containing model metadata (such as pending progress). 
 
 ## Usage
 
@@ -80,6 +81,11 @@ dispatch(updateSuccess([
 
 What this will do is find the data entry in the collection by the cid and overwrite it with the contents of `update`.
 
+## Development
+
+### Testing
+
+`npm test` or if you prefer `npm run test:watch`
 
 ### Compile
 
