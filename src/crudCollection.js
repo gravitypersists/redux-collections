@@ -62,7 +62,7 @@ export default function crudCollection(forType, options = {}) {
             if (!itemUpdate) return s;
             return crudItem(s, { ...action, update: itemUpdate.data });
           } else {
-            const dataUpdate = find(action.items, (i) => i.data[options.uniqueBy]);
+            const dataUpdate = find(action.items, (i) => i[options.uniqueBy]);
             if (!dataUpdate) return s;
             return crudItem(s, { ...action, update: dataUpdate });
           }
