@@ -49,8 +49,10 @@ export default function crudCollection(forType, options = {}) {
       case actions.fetchSuccess:
         return unique(mergeNew(state, action.items)).map(s => crudItem(s, action));
       case actions.deleteSuccess:
-        const filterOut = (options.uniqueBy) ? s.data[uniqueBy] : s.cid;
-        return state.filter(s => action.items.indexOf(s.data.id) === -1);
+        return state.filter(s => {
+          const filterOut = (options.uniqueBy) ? s.data[options.uniqueBy] : s.cid;
+          return action.items.indexOf(filterOut) === -1
+        });
       case actions.updateSuccess:
         return state.map(s => {
           const update = find(action.items, { cid: s.cid });
