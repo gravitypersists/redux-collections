@@ -22,7 +22,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function crudCollection(forType) {
+function crudCollection(forType, options) {
+
+  var unique = function unique(items) {
+    options.uniqueBy ? (0, _lodash.uniqBy)(items, options.uniqueBy) : items;
+  };
+
+  var mergeNew = function mergeNew(oldItems, newItems) {
+    return [].concat(_toConsumableArray(oldItems), _toConsumableArray(newItems.map(function (s) {
+      return { data: s };
+    })));
+  };
+
   var actions = (0, _actionTypesFor2.default)(forType);
 
   var statusReducer = function statusReducer() {
@@ -62,19 +73,13 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.fetchSuccess:
-        return action.items.map(function (s) {
-          return (0, _crudItem2.default)(forType)({ data: s }, action);
-        });
       case actions.createSuccess:
-        var mergedItems = [].concat(_toConsumableArray(state), _toConsumableArray(action.items.map(function (s) {
-          return { data: s };
-        })));
-        return mergedItems.map(function (s) {
+      case actions.fetchSuccess:
+        return unique(merge(action.items, state)).map(function (s) {
           return (0, _crudItem2.default)(forType)(s, action);
         });
       case actions.deleteSuccess:
-        // TODO: id => cid
+        var filterOut = options.uniqueBy ? s.data[uniqueBy] : s.cid;
         return state.filter(function (s) {
           return action.items.indexOf(s.data.id) === -1;
         });
