@@ -185,4 +185,85 @@ describe('Creating', () => {
 
   })
 
+  describe('Failure', () => {
+
+    before(() => {
+      store.dispatch(testActions.createStart())
+      store.dispatch(testActions.createFailed('fuck'))
+    })
+
+    xit('?????', () => {
+      expect('a test').toBe('written')
+    })
+
+  })
+
+})
+
+describe('Deleting', () => {
+  let reducer, store, x
+
+  beforeEach(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+  })
+
+  describe('Start', () => {
+
+    xit('?????', () => {
+      expect('a test').toBe('written')
+    })
+
+  })
+
+  describe('Success', () => {
+
+    describe('when an array of uniqueness parameter is given', () => {
+
+      it('deletes the items from the collection', () => {
+        store.dispatch(testActions.deleteSuccess([2]))
+        const deletedItem = find(store.getState().items, i => i.data.id === 2)
+        expect(deletedItem).toBe(undefined)
+      })
+
+    })
+
+    xdescribe('when no uniqueness parameter and an array of cid is given', () => {
+
+      it('deletes the items from the collection', () => {
+        const store = createStore(crudCollection('test'))
+        store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+        const firstCid = store.getState().items[0].cid
+        store.dispatch(testActions.deleteSuccess([firstCid]))
+        const deletedItem = find(store.getState().items, { cid: firstCid })
+        expect(deletedItem).toBe(undefined)
+      })
+
+    })
+
+    xdescribe('when an array of items is given', () => {
+
+      it('deletes the items from the collection', () => {
+        const firstItem = store.getState().items[0]
+        store.dispatch(testActions.deleteSuccess([firstItem]))
+        const deletedItem = find(store.getState().items, { cid: firstItem.cid })
+        expect(deletedItem).toBe(undefined)
+      })
+
+    })
+
+    xdescribe('when an array of item.datas is given', () => {
+
+      it('deletes the items from the collection', () => {
+        const firstItem = store.getState().items[0].data
+        store.dispatch(testActions.deleteSuccess([firstItem]))
+        const deletedItem = find(store.getState().items, i => i.data.id === firstItem.id)
+        expect(deletedItem).toBe(undefined)
+      })
+
+    })
+
+  })
+
 })
