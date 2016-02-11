@@ -208,13 +208,30 @@ describe('Creating', () => {
 
   describe('Failure', () => {
 
-    before(() => {
-      store.dispatch(testActions.createStart())
-      store.dispatch(testActions.createFailed('fuck'))
+    xdescribe('when optimistic updates are enabled', () => {
+
+      before(() => {
+        store.dispatch(testActions.createStart())
+        store.dispatch(testActions.createFailed('fuck'))
+      })
+
+      it('deletes the optimistically created items :(', () => {
+
+      })
+
     })
 
-    xit('?????', () => {
-      expect('a test').toBe('written')
+    xdescribe('when optimistic updates are not enabled', () => {
+
+      before(() => {
+        store.dispatch(testActions.createStart())
+        store.dispatch(testActions.createFailed('fuck'))
+      })
+
+      it('does something, do not know yet', () => {
+
+      })
+
     })
 
   })
