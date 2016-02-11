@@ -309,7 +309,7 @@ describe('Updating', () => {
 
   describe('Start', () => {
 
-    xdescribe('when an array of items is given', () => {
+    describe('when an array of items is given', () => {
 
       describe('when optimistic is not set to true', () => {
 
@@ -327,7 +327,7 @@ describe('Updating', () => {
 
       })
 
-      describe('when optimistic is set to true', () => {
+      xdescribe('when optimistic is set to true', () => {
 
         it('sets the status of the item to "pending"', () => {
           store.dispatch(testActions.updateStart([{ id: 1 }]))

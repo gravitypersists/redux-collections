@@ -47,8 +47,6 @@ export default function crudCollection(forType, options = {}) {
     switch (action.type) {
 
       case actions.fetchSuccess:
-        return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
-
       case actions.createSuccess:
         return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
 
@@ -58,6 +56,7 @@ export default function crudCollection(forType, options = {}) {
           return action.items.indexOf(filterOut) === -1
         });
 
+      case actions.updateStart:
       case actions.updateSuccess:
         if (action.items.length === 0) return state;
         const cruddy = action.items[0].__cruddy;
