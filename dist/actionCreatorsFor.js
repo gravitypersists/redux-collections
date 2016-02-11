@@ -13,8 +13,10 @@ exports.default = function (type) {
       var a = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
       var b = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-      if (a.constructor === Array) {
+      if ((0, _lodash.isArray)(a)) {
         return _extends({ type: actions[action] }, b, { items: a });
+      } else if ((0, _lodash.isString)(a)) {
+        return _extends({ type: actions[action] }, b, { string: a });
       } else {
         return _extends({ type: actions[action] }, a);
       }
@@ -26,6 +28,8 @@ exports.default = function (type) {
   }
   return ret;
 };
+
+var _lodash = require('lodash');
 
 var _actionTypesFor = require('./actionTypesFor');
 

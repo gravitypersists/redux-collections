@@ -22,16 +22,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function crudCollection(forType, options) {
+function crudCollection(forType) {
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  var crudItem = (0, _crudItem2.default)(forType);
 
   var unique = function unique(items) {
-    options.uniqueBy ? (0, _lodash.uniqBy)(items, options.uniqueBy) : items;
+    return options.uniqueBy ? (0, _lodash.uniqBy)(items, function (i) {
+      return i.data[options.uniqueBy];
+    }) : items;
   };
 
   var mergeNew = function mergeNew(oldItems, newItems) {
-    return [].concat(_toConsumableArray(oldItems), _toConsumableArray(newItems.map(function (s) {
+    return [].concat(_toConsumableArray(newItems.map(function (s) {
       return { data: s };
-    })));
+    })), _toConsumableArray(oldItems.reverse()));
   };
 
   var actions = (0, _actionTypesFor2.default)(forType);
@@ -45,7 +50,7 @@ function crudCollection(forType, options) {
         return 'pending';
       case actions.fetchSuccess:
         return 'success';
-      case actions.fetchError:
+      case actions.fetchFailed:
         return 'error';
       default:
         return state;
@@ -61,8 +66,8 @@ function crudCollection(forType, options) {
         return null;
       case actions.fetchSuccess:
         return null;
-      case actions.fetchError:
-        return action.error;
+      case actions.fetchFailed:
+        return action.string;
       default:
         return state;
     }
@@ -73,25 +78,42 @@ function crudCollection(forType, options) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.createSuccess:
+
       case actions.fetchSuccess:
-        return unique(merge(action.items, state)).map(function (s) {
-          return (0, _crudItem2.default)(forType)(s, action);
+      case actions.createSuccess:
+        return unique(mergeNew(state, action.items)).reverse().map(function (s) {
+          return crudItem(s, action);
         });
+
       case actions.deleteSuccess:
-        var filterOut = options.uniqueBy ? s.data[uniqueBy] : s.cid;
         return state.filter(function (s) {
-          return action.items.indexOf(s.data.id) === -1;
+          var filterOut = options.uniqueBy ? s.data[options.uniqueBy] : s.cid;
+          return action.items.indexOf(filterOut) === -1;
         });
+
+      case actions.updateStart:
       case actions.updateSuccess:
+        if (action.items.length === 0) return state;
+        var cruddy = action.items[0].__cruddy;
         return state.map(function (s) {
-          var update = (0, _lodash.find)(action.items, { cid: s.cid });
-          return update ? (0, _crudItem2.default)(forType)(s, _extends({}, action, update.update)) : s;
+          if (cruddy) {
+            var itemUpdate = (0, _lodash.find)(action.items, { cid: s.cid });
+            if (!itemUpdate) return s;
+            return crudItem(s, _extends({}, action, { update: itemUpdate.data }));
+          } else {
+            var dataUpdate = (0, _lodash.find)(action.items, function (i) {
+              return i[options.uniqueBy];
+            });
+            if (!dataUpdate) return s;
+            return crudItem(s, _extends({}, action, { update: dataUpdate }));
+          }
         });
+
       default:
         return state.map(function (s) {
-          return (0, _crudItem2.default)(forType)(s, action);
+          return crudItem(s, action);
         });
+
     }
   };
 
