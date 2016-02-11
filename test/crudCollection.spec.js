@@ -313,10 +313,10 @@ describe('Updating', () => {
 
       describe('when optimistic is not set to true', () => {
 
-        it('sets the status of the item to "pending"', () => {
+        it('sets the status of the item to "updating"', () => {
           store.dispatch(testActions.updateStart([{ id: 1 }]))
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
-          expect(updatedItem.status).toEqual('pending')
+          expect(updatedItem.status).toEqual('updating')
         })
 
         it('does not modify the data model yet', () => {
@@ -329,10 +329,10 @@ describe('Updating', () => {
 
       xdescribe('when optimistic is set to true', () => {
 
-        it('sets the status of the item to "pending"', () => {
+        it('sets the status of the item to "updating"', () => {
           store.dispatch(testActions.updateStart([{ id: 1 }]))
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
-          expect(updatedItem.status).toEqual('pending')
+          expect(updatedItem.status).toEqual('updating')
         })
 
         it('modifies the data model', () => {

@@ -10,7 +10,7 @@ export default function crudItem(forType) {
   const statusReducer = (state = 'success', action = {}) => {
     switch (action.type) {
       case actions.updateStart:
-        return 'pending';
+        return 'updating';
       default:
         return state;
     }
