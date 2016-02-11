@@ -23,7 +23,7 @@ export default function crudCollection(forType, options = {}) {
         return 'pending';
       case actions.fetchSuccess:
         return 'success';
-      case actions.fetchError:
+      case actions.fetchFailed:
         return 'error';
       default:
         return state;
@@ -36,8 +36,8 @@ export default function crudCollection(forType, options = {}) {
         return null;
       case actions.fetchSuccess:
         return null;
-      case actions.fetchError:
-        return action.error;
+      case actions.fetchFailed:
+        return action.string;
       default:
         return state;
     }

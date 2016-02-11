@@ -43,7 +43,7 @@ describe('Fetching', () => {
       store.dispatch(testActions.fetchStart())
     })
 
-    xit('sets status to "pending"', () => {
+    it('sets status to "pending"', () => {
       expect(store.getState().status).toEqual('pending')
     })
 
@@ -102,11 +102,11 @@ describe('Fetching', () => {
       store.dispatch(testActions.fetchFailed('fuck'))
     })
 
-    xit('sets status to "error"', () => {
+    it('sets status to "error"', () => {
       expect(store.getState().status).toEqual('error')
     })
 
-    xit('sets the value of error to the fuck', () => {
+    it('sets the value of error to the fuck', () => {
       expect(store.getState().error).toEqual('fuck')
     })
 
