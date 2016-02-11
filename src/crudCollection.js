@@ -12,7 +12,7 @@ export default function crudCollection(forType, options = {}) {
   }
 
   const mergeNew = (oldItems, newItems) => {
-    return [...oldItems, ...newItems.map(s => ({ data: s }))];
+    return [...newItems.map(s => ({ data: s })), ...oldItems.reverse()];
   }
 
   const actions = actionTypesFor(forType);
@@ -45,14 +45,19 @@ export default function crudCollection(forType, options = {}) {
 
   const itemsReducer = (state = [], action = {}) => {
     switch (action.type) {
-      case actions.createSuccess:
+
       case actions.fetchSuccess:
-        return unique(mergeNew(state, action.items)).map(s => crudItem(s, action));
+        return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
+
+      case actions.createSuccess:
+        return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
+
       case actions.deleteSuccess:
         return state.filter(s => {
           const filterOut = (options.uniqueBy) ? s.data[options.uniqueBy] : s.cid;
           return action.items.indexOf(filterOut) === -1
         });
+
       case actions.updateSuccess:
         if (action.items.length === 0) return state;
         const cruddy = action.items[0].__cruddy;
@@ -67,8 +72,10 @@ export default function crudCollection(forType, options = {}) {
             return crudItem(s, { ...action, update: dataUpdate });
           }
         });
+
       default:
         return state.map(s => crudItem(s, action));
+
     }
   }
 

@@ -67,13 +67,30 @@ describe('Fetching', () => {
       expect(store.getState().items[0].cid).toBeA('number')
     })
 
+    describe('when an item is being added with same uniqueness parameter', () => {
+
+      before(() => {
+        store = createStore(crudCollection('test', { uniqueBy: 'id' }))
+      })
+
+      it('overwrites the older item', () => {
+        store.dispatch(testActions.fetchSuccess([{ id: 1, newOne: false }]))
+        store.dispatch(testActions.fetchSuccess([{ id: 1, newOne: true }]))
+        const item = find(store.getState().items, i => i.data.id === 1)
+        expect(item.data.newOne).toEqual(true)
+      })
+
+    })
+
   })
 
   describe('Subsequent success', () => {
 
-    before(() => {
+    beforeEach(() => {
+      store = createStore(reducer)
       store.dispatch(testActions.fetchStart())
-      store.dispatch(testActions.fetchSuccess([{ test: 'anotherIsGood' }]))
+      store.dispatch(testActions.fetchSuccess([{ first: true }]))
+      store.dispatch(testActions.fetchSuccess([{ second: true }]))
     })
 
     it('merges the new item', () => {
@@ -86,7 +103,11 @@ describe('Fetching', () => {
       expect(second.cid).toNotEqual(first.cid)
     })
 
-    it('does not create a new cid for existing items', () => {
+    it('preserves item creation ordering', () => {
+      expect(store.getState().items[0].data.first).toEqual(true)
+    })
+
+    it('does not update existing items cids', () => {
       const cidBefore = store.getState().items[0].cid
       store.dispatch(testActions.fetchSuccess([{ test: '' }]))
       const cidAfter = store.getState().items[0].cid
@@ -175,7 +196,7 @@ describe('Creating', () => {
       expect(last(store.getState().items).status).toEqual('success')
     })
 
-    xit('overwrites items that match on uniqueness parameter', () => {
+    it('overwrites items that match on uniqueness parameter', () => {
       store.dispatch(testActions.createSuccess([{ id:100, second: false }]))
       store.dispatch(testActions.createSuccess([{ id:100, second: true }]))
       const items = filter(store.getState().items, i => i.data.id === 100)
