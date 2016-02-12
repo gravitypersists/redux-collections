@@ -43,6 +43,19 @@ export default function crudCollection(forType, options = {}) {
     }
   }
 
+  const creatingReducer = (state = 'success', action = {}) => {
+    switch (action.type) {
+      case actions.createStart:
+        return 'pending';
+      case actions.createSuccess:
+        return 'success';
+      case actions.createFailed:
+        return 'error';
+      default:
+        return state;
+    }
+  }
+
   const itemsReducer = (state = [], action = {}) => {
     switch (action.type) {
 
@@ -81,6 +94,7 @@ export default function crudCollection(forType, options = {}) {
   return combineReducers({
     status: statusReducer,
     error: errorReducer,
+    creating: creatingReducer,
     items: itemsReducer
   });
 }

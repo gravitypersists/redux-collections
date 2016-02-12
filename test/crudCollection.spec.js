@@ -152,6 +152,11 @@ describe('Creating', () => {
 
   describe('Start', () => {
 
+    it('sets the status of creating to "pending"', () => {
+      store.dispatch(testActions.createStart([{ one:1 }]))
+      expect(store.getState().creating).toEqual('pending')
+    })
+
     xit('creates optimistic items if provided things', () => {
       const beforeLength = store.getState().items.length
       store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
@@ -182,6 +187,18 @@ describe('Creating', () => {
   })
 
   describe('Success', () => {
+
+    it('sets the status of creating to "success"', () => {
+      store.dispatch(testActions.createStart())
+      store.dispatch(testActions.createSuccess([{ one:1 }]))
+      expect(store.getState().creating).toEqual('success')
+    })
+
+    xit('does not set the status of creating to "success" if there are still pending creations', () => {
+      store.dispatch(testActions.createStart())
+      store.dispatch(testActions.createSuccess([{ one:1 }]))
+      expect(store.getState().creating).toEqual('success')
+    })
 
     it('creates new items', () => {
       const beforeLength = store.getState().items.length
