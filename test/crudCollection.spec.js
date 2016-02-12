@@ -195,9 +195,10 @@ describe('Creating', () => {
     })
 
     xit('does not set the status of creating to "success" if there are still pending creations', () => {
-      store.dispatch(testActions.createStart())
-      store.dispatch(testActions.createSuccess([{ one:1 }]))
-      expect(store.getState().creating).toEqual('success')
+      store.dispatch(testActions.createStart([{ id: 99 }]))
+      store.dispatch(testActions.createStart([{ id: 98 }]))
+      store.dispatch(testActions.createSuccess([{ id: 99 }]))
+      expect(store.getState().creating).toEqual('pending')
     })
 
     it('creates new items', () => {
