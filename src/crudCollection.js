@@ -37,7 +37,7 @@ export default function crudCollection(forType, options = {}) {
       case actions.fetchSuccess:
         return null;
       case actions.fetchFailed:
-        return action.string;
+        return action.error;
       default:
         return state;
     }
