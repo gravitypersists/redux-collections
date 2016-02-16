@@ -226,6 +226,13 @@ describe('Creating', () => {
 
   describe('Failure', () => {
 
+    it('adds the item to the creation error array', () => {
+      store.dispatch(testActions.createStart())
+      store.dispatch(testActions.createFailed('oh fuck', [{ id: 151 }]))
+      expect(store.getState().failedCreations[0].error).toEqual('oh fuck')
+      expect(store.getState().failedCreations[0].data.id).toEqual(151)
+    })
+
     xdescribe('when optimistic updates are enabled', () => {
 
       before(() => {

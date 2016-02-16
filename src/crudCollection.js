@@ -56,6 +56,15 @@ export default function crudCollection(forType, options = {}) {
     }
   }
 
+  const failedCreationsReducer = (state = [], action = {}) => {
+    switch (action.type) {
+      case actions.createFailed:
+        return [...state, ...action.items.map(i => ({ data: i, error: action.error }))]
+      default:
+        return state.map(s => crudItem(s, action));
+    }
+  }
+
   const itemsReducer = (state = [], action = {}) => {
     switch (action.type) {
 
@@ -95,6 +104,7 @@ export default function crudCollection(forType, options = {}) {
     status: statusReducer,
     error: errorReducer,
     creating: creatingReducer,
+    failedCreations: failedCreationsReducer,
     items: itemsReducer
   });
 }

@@ -67,9 +67,41 @@ function crudCollection(forType) {
       case actions.fetchSuccess:
         return null;
       case actions.fetchFailed:
-        return action.string;
+        return action.error;
       default:
         return state;
+    }
+  };
+
+  var creatingReducer = function creatingReducer() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? 'success' : arguments[0];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    switch (action.type) {
+      case actions.createStart:
+        return 'pending';
+      case actions.createSuccess:
+        return 'success';
+      case actions.createFailed:
+        return 'error';
+      default:
+        return state;
+    }
+  };
+
+  var failedCreationsReducer = function failedCreationsReducer() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    switch (action.type) {
+      case actions.createFailed:
+        return [].concat(_toConsumableArray(state), _toConsumableArray(action.items.map(function (i) {
+          return { data: i, error: action.error };
+        })));
+      default:
+        return state.map(function (s) {
+          return crudItem(s, action);
+        });
     }
   };
 
@@ -120,6 +152,8 @@ function crudCollection(forType) {
   return (0, _redux.combineReducers)({
     status: statusReducer,
     error: errorReducer,
+    creating: creatingReducer,
+    failedCreations: failedCreationsReducer,
     items: itemsReducer
   });
 }
