@@ -456,8 +456,9 @@ describe('Updating', () => {
 
     describe('when an array of item.datas is given', () => {
 
-      it('sets the status of the item to "success"', () => {
+      it('sets the status of the items to "success"', () => {
         const firstData = store.getState().items[0].data
+        store.dispatch(testActions.updateStart([firstData]))
         store.dispatch(testActions.updateSuccess([firstData]))
         const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
         expect(updatedItem.status).toEqual('success')

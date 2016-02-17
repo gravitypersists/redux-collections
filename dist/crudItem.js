@@ -23,6 +23,8 @@ function crudItem(forType) {
     switch (action.type) {
       case actions.updateStart:
         return 'updating';
+      case actions.updateSuccess:
+        return 'success';
       default:
         return state;
     }
