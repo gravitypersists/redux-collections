@@ -351,7 +351,7 @@ describe('Updating', () => {
 
   describe('Start', () => {
 
-    describe('when an array of items is given', () => {
+    describe('when an array of item.datas is given', () => {
 
       describe('when optimistic is not set to true', () => {
 
@@ -382,6 +382,34 @@ describe('Updating', () => {
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
           expect(updatedItem.data.modified).toEqual(true)
         })
+
+      })
+
+    })
+
+    describe('when an array of items is given', () => {
+
+      describe('when optimistic is not set to true', () => {
+        let updatedItem
+
+        beforeEach(() => {
+          const firstCid = store.getState().items[0].cid
+          store.dispatch(testActions.updateStart([{ cid: firstCid, __cruddy: true, data: { modified: true } }]))
+          updatedItem = find(store.getState().items, { cid: firstCid })
+        })
+
+        it('sets the status of the item to "updating"', () => {
+          expect(updatedItem.status).toEqual('updating')
+        })
+
+        it('does not modify the data model yet', () => {
+          expect(updatedItem.data.modified).toEqual(undefined)
+        })
+
+      })
+
+      xdescribe('when optimistic is set to true', () => {
+
 
       })
 
