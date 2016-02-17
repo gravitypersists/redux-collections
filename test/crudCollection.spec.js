@@ -282,6 +282,12 @@ describe('Deleting', () => {
         expect(deletedItem.status).toBe("deleting")
       })
 
+      it('does not modify the status of other items', () => {
+        store.dispatch(testActions.deleteStart([2]))
+        const otherItem = find(store.getState().items, i => i.data.id === 1)
+        expect(otherItem.status).toBe("success")
+      })
+
     })
 
   })
