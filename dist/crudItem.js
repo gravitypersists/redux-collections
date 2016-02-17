@@ -25,6 +25,8 @@ function crudItem(forType) {
         return 'updating';
       case actions.updateSuccess:
         return 'success';
+      case actions.deleteStart:
+        return 'deleting';
       default:
         return state;
     }
