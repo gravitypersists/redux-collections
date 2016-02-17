@@ -355,14 +355,21 @@ describe('Updating', () => {
 
       describe('when optimistic is not set to true', () => {
 
-        it('sets the status of the item to "updating"', () => {
-          store.dispatch(testActions.updateStart([{ id: 1 }]))
+        beforeEach(() => {
+          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
+        })
+
+        it('sets the status of the items to "updating"', () => {
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
           expect(updatedItem.status).toEqual('updating')
         })
 
+        it('does not set the status of non-updating items to "updating"', () => {
+          const updatedItem = find(store.getState().items, (i) => i.data.id === 3)
+          expect(updatedItem.status).toEqual('success')
+        })
+
         it('does not modify the data model yet', () => {
-          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
           expect(updatedItem.data.modified).toEqual(undefined)
         })

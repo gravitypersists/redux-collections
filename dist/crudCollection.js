@@ -134,7 +134,7 @@ function crudCollection(forType) {
             return crudItem(s, _extends({}, action, { update: itemUpdate.data }));
           } else {
             var dataUpdate = (0, _lodash.find)(action.items, function (i) {
-              return i[options.uniqueBy];
+              return i[options.uniqueBy] === s.data[options.uniqueBy];
             });
             if (!dataUpdate) return s;
             return crudItem(s, _extends({}, action, { update: dataUpdate }));
