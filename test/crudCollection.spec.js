@@ -274,8 +274,20 @@ describe('Deleting', () => {
 
   describe('Start', () => {
 
-    xit('?????', () => {
-      expect('a test').toBe('written')
+    describe('when an array of uniqueness parameter is given', () => {
+
+      it('sets the status of the items to "deleting"', () => {
+        store.dispatch(testActions.deleteStart([2]))
+        const deletedItem = find(store.getState().items, i => i.data.id === 2)
+        expect(deletedItem.status).toBe("deleting")
+      })
+
+      it('does not modify the status of other items', () => {
+        store.dispatch(testActions.deleteStart([2]))
+        const otherItem = find(store.getState().items, i => i.data.id === 1)
+        expect(otherItem.status).toBe("success")
+      })
+
     })
 
   })
