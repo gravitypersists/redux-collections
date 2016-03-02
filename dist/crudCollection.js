@@ -117,6 +117,12 @@ function crudCollection(forType) {
           return crudItem(s, action);
         });
 
+      case actions.deleteStart:
+        return state.map(function (s) {
+          var filterOut = options.uniqueBy ? s.data[options.uniqueBy] : s.cid;
+          return action.items.indexOf(filterOut) === -1 ? s : crudItem(s, action);
+        });
+
       case actions.deleteSuccess:
         return state.filter(function (s) {
           var filterOut = options.uniqueBy ? s.data[options.uniqueBy] : s.cid;
