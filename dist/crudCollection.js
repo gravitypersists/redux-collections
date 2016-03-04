@@ -147,6 +147,9 @@ function crudCollection(forType) {
           }
         });
 
+      case actions.empty:
+        return [];
+
       default:
         return state.map(function (s) {
           return crudItem(s, action);
