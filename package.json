@@ -1,6 +1,6 @@
 {
   "name": "redux-crud-collections",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Reducers/actions for standard CRUD operations",
   "main": "dist/index.js",
   "scripts": {
