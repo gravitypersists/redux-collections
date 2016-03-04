@@ -16,6 +16,7 @@ exports.default = function (type) {
     updateFailed: t + "_UPDATE_FAILED",
     deleteStart: t + "_DELETE_START",
     deleteSuccess: t + "_DELETE_SUCCESS",
-    deleteFailed: t + "_DELETE_FAILED"
+    deleteFailed: t + "_DELETE_FAILED",
+    empty: t + "_EMPTY"
   };
 };

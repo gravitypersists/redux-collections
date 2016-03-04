@@ -351,7 +351,6 @@ describe('Deleting', () => {
 
 })
 
-
 describe('Updating', () => {
   let reducer, store
 
@@ -505,4 +504,19 @@ describe('Updating', () => {
 
   })
 
+})
+
+describe('Empty', () => {
+  let reducer, store
+
+  beforeEach(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+  })
+
+  it('empties the collection', () => {
+    store.dispatch(testActions.empty());
+    expect(store.getState().items.length).toEqual(0);
+  })
 })

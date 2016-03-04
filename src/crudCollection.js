@@ -100,6 +100,9 @@ export default function crudCollection(forType, options = {}) {
           }
         });
 
+      case actions.empty:
+        return [];
+
       default:
         return state.map(s => crudItem(s, action));
 
