@@ -434,10 +434,8 @@ describe('Updating', () => {
     })
 
     describe('when no arguments are given', () => {
-      let updatedItem
 
       beforeEach(() => {
-        const firstCid = store.getState().items[0].cid
         store.dispatch(testActions.updateStart())
       })
 
@@ -510,10 +508,8 @@ describe('Updating', () => {
     })
 
     describe('when no arguments are given', () => {
-      let updatedItem
 
       beforeEach(() => {
-        const firstCid = store.getState().items[0].cid
         store.dispatch(testActions.updateStart())
         store.dispatch(testActions.updateSuccess())
       })
