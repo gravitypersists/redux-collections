@@ -444,9 +444,7 @@ describe('Updating', () => {
       it('sets the status of all items to "updating"', () => {
         const status = store.getState().items.map(i => i.status);
         const uniqueStatuses = uniq(status);
-        expect(uniqueStatuses.length).toEqual(1);
-        console.log(status);
-        expect(uniqueStatuses[0]).toEqual('updating');
+        expect(uniqueStatuses).toEqual(['updating']);
       })
 
     })
@@ -523,8 +521,7 @@ describe('Updating', () => {
       it('sets the status of all items to "success"', () => {
         const status = store.getState().items.map(i => i.status);
         const uniqueStatuses = uniq(status);
-        expect(uniqueStatuses.length).toEqual(1);
-        expect(uniqueStatuses[0]).toEqual('success');
+        expect(uniqueStatuses).toEqual(['success']);
       })
 
     })
