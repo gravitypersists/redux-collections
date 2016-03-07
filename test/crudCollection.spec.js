@@ -433,6 +433,20 @@ describe('Updating', () => {
 
     })
 
+    describe('when no arguments are given', () => {
+      let updatedItem
+
+      beforeEach(() => {
+        const firstCid = store.getState().items[0].cid
+        store.dispatch(testActions.updateStart())
+        updatedItem = find(store.getState().items, { cid: firstCid })
+      })
+
+      it('sets the status of all items to "updating"', () => {
+        expect(updatedItem.status).toEqual('updating')
+      })
+
+    })
   })
 
   describe('Success', () => {
@@ -494,6 +508,21 @@ describe('Updating', () => {
 
     })
 
+    describe('when no arguments are given', () => {
+      let updatedItem
+
+      beforeEach(() => {
+        const firstCid = store.getState().items[0].cid
+        store.dispatch(testActions.updateStart())
+        store.dispatch(testActions.updateSuccess())
+        updatedItem = find(store.getState().items, { cid: firstCid })
+      })
+
+      it('sets the status of all items to "success"', () => {
+        expect(updatedItem.status).toEqual('success')
+      })
+
+    })
   })
 
   describe('Error', () => {

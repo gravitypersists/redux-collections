@@ -50,7 +50,7 @@ var buildAction = function buildAction(actions, action) {
         var a = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
         var b = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-        return _extends({ type: action }, b, { items: a });
+        return _extends({ type: action }, b, { items: a, noArgs: a.length === 0 });
       };
 
     default:
