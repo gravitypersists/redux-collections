@@ -1,6 +1,6 @@
 import expect from 'expect'
 import { createStore } from 'redux'
-import { last, find, filter } from 'lodash'
+import { last, find, filter, uniq } from 'lodash'
 
 import crudCollection from '../src/crudCollection'
 import actionCreatorsFor from '../src/actionCreatorsFor'
@@ -439,11 +439,14 @@ describe('Updating', () => {
       beforeEach(() => {
         const firstCid = store.getState().items[0].cid
         store.dispatch(testActions.updateStart())
-        updatedItem = find(store.getState().items, { cid: firstCid })
       })
 
       it('sets the status of all items to "updating"', () => {
-        expect(updatedItem.status).toEqual('updating')
+        const status = store.getState().items.map(i => i.status);
+        const uniqueStatuses = uniq(status);
+        expect(uniqueStatuses.length).toEqual(1);
+        console.log(status);
+        expect(uniqueStatuses[0]).toEqual('updating');
       })
 
     })
@@ -515,11 +518,13 @@ describe('Updating', () => {
         const firstCid = store.getState().items[0].cid
         store.dispatch(testActions.updateStart())
         store.dispatch(testActions.updateSuccess())
-        updatedItem = find(store.getState().items, { cid: firstCid })
       })
 
       it('sets the status of all items to "success"', () => {
-        expect(updatedItem.status).toEqual('success')
+        const status = store.getState().items.map(i => i.status);
+        const uniqueStatuses = uniq(status);
+        expect(uniqueStatuses.length).toEqual(1);
+        expect(uniqueStatuses[0]).toEqual('success');
       })
 
     })
