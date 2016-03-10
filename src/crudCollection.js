@@ -12,7 +12,7 @@ export default function crudCollection(forType, options = {}) {
   }
 
   const mergeNew = (oldItems, newItems) => {
-    return [...newItems.map(s => ({ data: s })), ...oldItems.reverse()];
+    return [...newItems.map(s => ({ data: s })).reverse(), ...oldItems.reverse()];
   }
 
   const actions = actionTypesFor(forType);
