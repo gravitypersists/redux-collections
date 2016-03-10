@@ -131,6 +131,9 @@ function crudCollection(forType) {
 
       case actions.updateStart:
       case actions.updateSuccess:
+        if (action.noArgs) return state.map(function (s) {
+          return crudItem(s, _extends({}, action));
+        });
         if (action.items.length === 0) return state;
         var cruddy = action.items[0].__cruddy;
         return state.map(function (s) {

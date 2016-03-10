@@ -1,6 +1,6 @@
 import expect from 'expect'
 import { createStore } from 'redux'
-import { last, find, filter } from 'lodash'
+import { last, find, filter, uniq } from 'lodash'
 
 import crudCollection from '../src/crudCollection'
 import actionCreatorsFor from '../src/actionCreatorsFor'
@@ -433,6 +433,19 @@ describe('Updating', () => {
 
     })
 
+    describe('when no arguments are given', () => {
+
+      beforeEach(() => {
+        store.dispatch(testActions.updateStart())
+      })
+
+      it('sets the status of all items to "updating"', () => {
+        const status = store.getState().items.map(i => i.status);
+        const uniqueStatuses = uniq(status);
+        expect(uniqueStatuses).toEqual(['updating']);
+      })
+
+    })
   })
 
   describe('Success', () => {
@@ -494,6 +507,20 @@ describe('Updating', () => {
 
     })
 
+    describe('when no arguments are given', () => {
+
+      beforeEach(() => {
+        store.dispatch(testActions.updateStart())
+        store.dispatch(testActions.updateSuccess())
+      })
+
+      it('sets the status of all items to "success"', () => {
+        const status = store.getState().items.map(i => i.status);
+        const uniqueStatuses = uniq(status);
+        expect(uniqueStatuses).toEqual(['success']);
+      })
+
+    })
   })
 
   describe('Error', () => {

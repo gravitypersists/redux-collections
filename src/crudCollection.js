@@ -86,6 +86,7 @@ export default function crudCollection(forType, options = {}) {
 
       case actions.updateStart:
       case actions.updateSuccess:
+        if (action.noArgs) return state.map(s => crudItem(s, { ...action }));
         if (action.items.length === 0) return state;
         const cruddy = action.items[0].__cruddy;
         return state.map(s => {

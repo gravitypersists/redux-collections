@@ -38,6 +38,7 @@ function crudItem(forType) {
 
     switch (action.type) {
       case actions.updateSuccess:
+        if (action.noArgs) return state;
         return action.update;
       default:
         return state;

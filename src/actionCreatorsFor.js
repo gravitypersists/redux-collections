@@ -24,7 +24,7 @@ const buildAction = (actions, action) => {
     case actions.deleteStart:
     case actions.deleteSuccess:
       return function(a = [], b = {}) {
-        return { type: action, ...b, items: a }
+        return { type: action, ...b, items: a, noArgs: a.length === 0 }
       }
 
     default:
