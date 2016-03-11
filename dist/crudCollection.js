@@ -36,7 +36,7 @@ function crudCollection(forType) {
   var mergeNew = function mergeNew(oldItems, newItems) {
     return [].concat(_toConsumableArray(newItems.map(function (s) {
       return { data: s };
-    })), _toConsumableArray(oldItems.reverse()));
+    }).reverse()), _toConsumableArray(oldItems.reverse()));
   };
 
   var actions = (0, _actionTypesFor2.default)(forType);

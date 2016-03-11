@@ -82,6 +82,19 @@ describe('Fetching', () => {
 
     })
 
+    describe('when multiple items are added returns in order', () => {
+      before(() => {
+        store.dispatch(testActions.fetchSuccess([{ id: 1, name: 'A' }, { id: 2, name:'B' }, { id: 3, name:'C' }]))
+      })
+
+      it('should remain in order', () => {
+        const item = store.getState().items
+        expect(item[0].data.name) .toEqual('A')
+        expect(item[1].data.name) .toEqual('B')
+        expect(item[2].data.name) .toEqual('C')
+      })
+    })
+
   })
 
   describe('Subsequent success', () => {
