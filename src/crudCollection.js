@@ -17,7 +17,7 @@ export default function crudCollection(forType, options = {}) {
 
   const actions = actionTypesFor(forType);
 
-  const statusReducer = (state = 'success', action = {}) => {
+  const statusReducer = (state = 'none', action = {}) => {
     switch (action.type) {
       case actions.fetchStart:
         return 'pending';
