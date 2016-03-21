@@ -42,7 +42,7 @@ function crudCollection(forType) {
   var actions = (0, _actionTypesFor2.default)(forType);
 
   var statusReducer = function statusReducer() {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? 'success' : arguments[0];
+    var state = arguments.length <= 0 || arguments[0] === undefined ? 'none' : arguments[0];
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {

@@ -23,8 +23,8 @@ describe('Initialize', () => {
     expect(store.getState().error).toEqual(null)
   })
 
-  it('has status set to "success"', () => {
-    expect(store.getState().status).toEqual('success')
+  it('has status set to "none"', () => {
+    expect(store.getState().status).toEqual('none')
   })
 
 })
