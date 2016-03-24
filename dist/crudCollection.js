@@ -57,6 +57,20 @@ function crudCollection(forType) {
     }
   };
 
+  var validReducer = function validReducer() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    switch (action.type) {
+      case actions.fetchSuccess:
+        return true;
+      case actions.invalidate:
+        return false;
+      default:
+        return state;
+    }
+  };
+
   var errorReducer = function errorReducer() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -163,6 +177,7 @@ function crudCollection(forType) {
 
   return (0, _redux.combineReducers)({
     status: statusReducer,
+    valid: validReducer,
     error: errorReducer,
     creating: creatingReducer,
     failedCreations: failedCreationsReducer,

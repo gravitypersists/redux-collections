@@ -30,6 +30,17 @@ export default function crudCollection(forType, options = {}) {
     }
   }
 
+  const validReducer = (state = false, action = {}) => {
+    switch (action.type) {
+      case actions.fetchSuccess:
+        return true;
+      case actions.invalidate:
+        return false;
+      default:
+        return state;
+    }
+  }
+
   const errorReducer = (state = null, action = {}) => {
     switch (action.type) {
       case actions.fetchStart:
@@ -112,6 +123,7 @@ export default function crudCollection(forType, options = {}) {
 
   return combineReducers({
     status: statusReducer,
+    valid: validReducer,
     error: errorReducer,
     creating: creatingReducer,
     failedCreations: failedCreationsReducer,

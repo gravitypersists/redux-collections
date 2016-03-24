@@ -27,6 +27,10 @@ describe('Initialize', () => {
     expect(store.getState().status).toEqual('none')
   })
 
+  it('has valid set to false', () => {
+    expect(store.getState().valid).toEqual(false)
+  })
+
 })
 
 describe('Fetching', () => {
@@ -57,6 +61,10 @@ describe('Fetching', () => {
 
     it('sets status to "success"', () => {
       expect(store.getState().status).toEqual('success')
+    })
+
+    it('sets valid to true', () => {
+      expect(store.getState().valid).toEqual(true)
     })
 
     it('adds the new items', () => {
@@ -558,5 +566,20 @@ describe('Empty', () => {
   it('empties the collection', () => {
     store.dispatch(testActions.empty());
     expect(store.getState().items.length).toEqual(0);
+  })
+})
+
+describe('Invalidate', () => {
+  let reducer, store
+
+  beforeEach(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+    store.dispatch(testActions.fetchSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+  })
+
+  it('set the collections valid to false', () => {
+    store.dispatch(testActions.invalidate());
+    expect(store.getState().valid).toEqual(false);
   })
 })

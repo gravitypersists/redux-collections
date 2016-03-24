@@ -13,6 +13,7 @@ export default function(type) {
     deleteStart: `${t}_DELETE_START`,
     deleteSuccess: `${t}_DELETE_SUCCESS`,
     deleteFailed: `${t}_DELETE_FAILED`,
-    empty: `${t}_EMPTY`
+    empty: `${t}_EMPTY`,
+    invalidate: `${t}_INVALIDATE`
   }
 }
