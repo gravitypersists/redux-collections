@@ -545,11 +545,13 @@ describe('Updating', () => {
   })
 
   describe('Error', () => {
-
-    xit('?????', () => {
-      expect('a test').toBe('written')
+    it('sets status to "error"', () => {
+      const firstItem = store.getState().items[0]
+      store.dispatch(testActions.updateFailed('oh no'))
+      const updatedItem = find(store.getState().items, { cid: firstItem.cid })
+      expect(updatedItem.status).toEqual('error')
+      expect(updatedItem.error).toEqual('oh no')
     })
-
   })
 
 })
