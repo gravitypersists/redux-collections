@@ -13,8 +13,27 @@ export default function crudItem(forType) {
         return 'updating';
       case actions.updateSuccess:
         return 'success';
+      case actions.updateFailed:
+        return 'error'
       case actions.deleteStart:
         return 'deleting';
+      case actions.deleteSuccess:
+        return 'success'
+      case actions.deleteFailed:
+        return 'error'
+      default:
+        return state;
+    }
+  }
+
+  const errorReducer = (state = null, action = {}) => {
+    switch (action.type) {
+      case actions.updateStart:
+        return null;
+      case actions.updateSuccess:
+        return null;
+      case actions.updateFailed:
+        return action.error;
       default:
         return state;
     }
@@ -32,6 +51,7 @@ export default function crudItem(forType) {
 
   return combineReducers({
     status: statusReducer,
+    error: errorReducer,
     data: dataReducer,
     cid: (s = currentClientID++) => s,
     __cruddy: (s = true) => s

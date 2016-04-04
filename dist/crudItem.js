@@ -25,8 +25,30 @@ function crudItem(forType) {
         return 'updating';
       case actions.updateSuccess:
         return 'success';
+      case actions.updateFailed:
+        return 'error'
       case actions.deleteStart:
         return 'deleting';
+      case actions.deleteSuccess:
+        return 'success'
+      case actions.deleteFailed:
+        return 'error'
+      default:
+        return state;
+    }
+  };
+
+  var errorReducer = function errorReducer() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    switch (action.type) {
+      case actions.updateStart:
+        return null;
+      case actions.updateSuccess:
+        return null;
+      case actions.updateFailed:
+        return action.error;
       default:
         return state;
     }
@@ -47,6 +69,7 @@ function crudItem(forType) {
 
   return (0, _redux.combineReducers)({
     status: statusReducer,
+    error: errorReducer,
     data: dataReducer,
     cid: function cid() {
       var s = arguments.length <= 0 || arguments[0] === undefined ? currentClientID++ : arguments[0];
