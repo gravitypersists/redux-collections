@@ -1,19 +1,28 @@
-export default function(type) {
-  const t = type.toUpperCase();
-  return {
-    pend: `${t}_FETCH_START`,
-    add: `${t}_FETCH_SUCCESS`,
-    failedToAdd: `${t}_FETCH_FAILED`,
-    pendCreation: `${t}_CREATE_START`,
-    create: `${t}_CREATE_SUCCESS`,
-    failedToCreate: `${t}_CREATE_FAILED`,
-    pendUpdate: `${t}_UPDATE_START`,
-    update: `${t}_UPDATE_SUCCESS`,
-    failedToUpdate: `${t}_UPDATE_FAILED`,
-    pendDeletion: `${t}_DELETE_START`,
-    delete: `${t}_DELETE_SUCCESS`,
-    failedToDelete: `${t}_DELETE_FAILED`,
-    empty: `${t}_EMPTY`,
-    invalidate: `${t}_INVALIDATE`
-  }
+import snake from 'to-snake-case'
+import { reduce } from 'lodash'
+
+const types = [
+  'pend',
+  'add',
+  'failedToAdd',
+  'pendCreation',
+  'create',
+  'failedToCreate',
+  'pendUpdate',
+  'update',
+  'failedToUpdate',
+  'pendDeletion',
+  'delete',
+  'failedToDelete',
+  'empty',
+  'invalidate'
+]
+
+const appendName = (forKeyword, accumulator, type) => {
+  accumulator[type] = `${snake(type)}_${snake(forKeyword)}`.toUpperCase();
+  return accumulator;
+}
+
+export default function(forKeyword) {
+  return reduce(types, appendName.bind(null, forKeyword), {})
 }

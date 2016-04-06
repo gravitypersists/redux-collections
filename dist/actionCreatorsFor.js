@@ -46,6 +46,7 @@ var buildAction = function buildAction(actions, action) {
     case actions.update:
     case actions.pendDeletion:
     case actions.delete:
+    case actions.replace:
       return function () {
         var a = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
         var b = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
