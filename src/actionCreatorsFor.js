@@ -4,10 +4,10 @@ import actionTypesFor from './actionTypesFor';
 
 const buildAction = (actions, action) => {
   switch (action) {
-    case actions.fetchFailed:
-    case actions.createFailed:
-    case actions.deleteFailed:
-    case actions.updateFailed:
+    case actions.failedToAdd:
+    case actions.failedToCreate:
+    case actions.failedToDelete:
+    case actions.failedToUpdate:
       return function(a = '', b = [], c = {}) {
         if (isString(a)) {
           return { type: action, items: b, error: a, ...c }
@@ -16,13 +16,13 @@ const buildAction = (actions, action) => {
         }
       }
 
-    case actions.fetchSuccess:
-    case actions.createStart:
-    case actions.createSuccess:
-    case actions.updateStart:
-    case actions.updateSuccess:
-    case actions.deleteStart:
-    case actions.deleteSuccess:
+    case actions.add:
+    case actions.pendCreation:
+    case actions.create:
+    case actions.pendUpdate:
+    case actions.update:
+    case actions.pendDeletion:
+    case actions.delete:
       return function(a = [], b = {}) {
         return { type: action, ...b, items: a, noArgs: a.length === 0 }
       }

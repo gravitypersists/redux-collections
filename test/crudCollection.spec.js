@@ -44,7 +44,7 @@ describe('Fetching', () => {
   describe('Start', () => {
 
     before(() => {
-      store.dispatch(testActions.fetchStart())
+      store.dispatch(testActions.pend())
     })
 
     it('sets status to "pending"', () => {
@@ -56,7 +56,7 @@ describe('Fetching', () => {
   describe('Success', () => {
 
     before(() => {
-      store.dispatch(testActions.fetchSuccess([{ test: 'isGood' }]))
+      store.dispatch(testActions.add([{ test: 'isGood' }]))
     })
 
     it('sets status to "success"', () => {
@@ -82,8 +82,8 @@ describe('Fetching', () => {
       })
 
       it('overwrites the older item', () => {
-        store.dispatch(testActions.fetchSuccess([{ id: 1, newOne: false }]))
-        store.dispatch(testActions.fetchSuccess([{ id: 1, newOne: true }]))
+        store.dispatch(testActions.add([{ id: 1, newOne: false }]))
+        store.dispatch(testActions.add([{ id: 1, newOne: true }]))
         const item = find(store.getState().items, i => i.data.id === 1)
         expect(item.data.newOne).toEqual(true)
       })
@@ -92,7 +92,7 @@ describe('Fetching', () => {
 
     describe('when multiple items are added returns in order', () => {
       before(() => {
-        store.dispatch(testActions.fetchSuccess([{ id: 1, name: 'A' }, { id: 2, name:'B' }, { id: 3, name:'C' }]))
+        store.dispatch(testActions.add([{ id: 1, name: 'A' }, { id: 2, name:'B' }, { id: 3, name:'C' }]))
       })
 
       it('should remain in order', () => {
@@ -109,9 +109,9 @@ describe('Fetching', () => {
 
     beforeEach(() => {
       store = createStore(reducer)
-      store.dispatch(testActions.fetchStart())
-      store.dispatch(testActions.fetchSuccess([{ first: true }]))
-      store.dispatch(testActions.fetchSuccess([{ second: true }]))
+      store.dispatch(testActions.pend())
+      store.dispatch(testActions.add([{ first: true }]))
+      store.dispatch(testActions.add([{ second: true }]))
     })
 
     it('merges the new item', () => {
@@ -130,7 +130,7 @@ describe('Fetching', () => {
 
     it('does not update existing items cids', () => {
       const cidBefore = store.getState().items[0].cid
-      store.dispatch(testActions.fetchSuccess([{ test: '' }]))
+      store.dispatch(testActions.add([{ test: '' }]))
       const cidAfter = store.getState().items[0].cid
       expect(cidBefore).toEqual(cidAfter)
     })
@@ -140,8 +140,8 @@ describe('Fetching', () => {
   describe('Failure', () => {
 
     before(() => {
-      store.dispatch(testActions.fetchStart())
-      store.dispatch(testActions.fetchFailed('fuck'))
+      store.dispatch(testActions.pend())
+      store.dispatch(testActions.failedToAdd('fuck'))
     })
 
     it('sets status to "error"', () => {
@@ -154,7 +154,7 @@ describe('Fetching', () => {
 
     it('does not change the current items', () => {
       const beforeLength = store.getState().items.length
-      store.dispatch(testActions.fetchFailed('fuckkkkk'))
+      store.dispatch(testActions.failedToAdd('fuckkkkk'))
       const afterLength = store.getState().items.length
       expect(beforeLength).toEqual(afterLength)
     })
@@ -174,20 +174,20 @@ describe('Creating', () => {
   describe('Start', () => {
 
     it('sets the status of creating to "pending"', () => {
-      store.dispatch(testActions.createStart([{ one:1 }]))
+      store.dispatch(testActions.pendCreation([{ one:1 }]))
       expect(store.getState().creating).toEqual('pending')
     })
 
     xit('creates optimistic items if provided things', () => {
       const beforeLength = store.getState().items.length
-      store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
+      store.dispatch(testActions.pendCreation([{ id:1 }, { id:2 }, { id:3 }]))
       const afterLength = store.getState().items.length
       expect(beforeLength + 3).toEqual(afterLength)
     })
 
     it('does not create optimistic items if provided nothing', () => {
       const beforeLength = store.getState().items.length
-      store.dispatch(testActions.createStart())
+      store.dispatch(testActions.pendCreation())
       const afterLength = store.getState().items.length
       expect(beforeLength).toEqual(afterLength)
     })
@@ -195,13 +195,13 @@ describe('Creating', () => {
     it('does not create optimistic items if no uniqueness parameter is set', () => {
       const nonUniqueStore = createStore(crudCollection('test', { uniqueBy: 'id' }))
       const beforeLength = nonUniqueStore.getState().items.length
-      store.dispatch(testActions.createStart([{ id:1 }, { id:2 }, { id:3 }]))
+      store.dispatch(testActions.pendCreation([{ id:1 }, { id:2 }, { id:3 }]))
       const afterLength = nonUniqueStore.getState().items.length
       expect(beforeLength + 3).toNotEqual(afterLength)
     })
 
     xit('sets the status of optimistic items to "pending"', () => {
-      store.dispatch(testActions.createStart([{ one:1 }]))
+      store.dispatch(testActions.pendCreation([{ one:1 }]))
       expect(last(store.getState().items).status).toEqual('pending')
     })
 
@@ -210,34 +210,34 @@ describe('Creating', () => {
   describe('Success', () => {
 
     it('sets the status of creating to "success"', () => {
-      store.dispatch(testActions.createStart())
-      store.dispatch(testActions.createSuccess([{ one:1 }]))
+      store.dispatch(testActions.pendCreation())
+      store.dispatch(testActions.create([{ one:1 }]))
       expect(store.getState().creating).toEqual('success')
     })
 
     xit('does not set the status of creating to "success" if there are still pending creations', () => {
-      store.dispatch(testActions.createStart([{ id: 99 }]))
-      store.dispatch(testActions.createStart([{ id: 98 }]))
-      store.dispatch(testActions.createSuccess([{ id: 99 }]))
+      store.dispatch(testActions.pendCreation([{ id: 99 }]))
+      store.dispatch(testActions.pendCreation([{ id: 98 }]))
+      store.dispatch(testActions.create([{ id: 99 }]))
       expect(store.getState().creating).toEqual('pending')
     })
 
     it('creates new items', () => {
       const beforeLength = store.getState().items.length
-      store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+      store.dispatch(testActions.create([{ id:1 }, { id:2 }, { id:3 }]))
       const afterLength = store.getState().items.length
       expect(beforeLength + 3).toEqual(afterLength)
     })
 
     it('creates new items with status of "success"', () => {
       const beforeLength = store.getState().items.length
-      store.dispatch(testActions.createSuccess([{ id:10 }]))
+      store.dispatch(testActions.create([{ id:10 }]))
       expect(last(store.getState().items).status).toEqual('success')
     })
 
     it('overwrites items that match on uniqueness parameter', () => {
-      store.dispatch(testActions.createSuccess([{ id:100, second: false }]))
-      store.dispatch(testActions.createSuccess([{ id:100, second: true }]))
+      store.dispatch(testActions.create([{ id:100, second: false }]))
+      store.dispatch(testActions.create([{ id:100, second: true }]))
       const items = filter(store.getState().items, i => i.data.id === 100)
       expect(items.length).toEqual(1)
       expect(items[0].data.second).toEqual(true)
@@ -248,8 +248,8 @@ describe('Creating', () => {
   describe('Failure', () => {
 
     it('adds the item to the creation error array', () => {
-      store.dispatch(testActions.createStart())
-      store.dispatch(testActions.createFailed('oh fuck', [{ id: 151 }]))
+      store.dispatch(testActions.pendCreation())
+      store.dispatch(testActions.failedToCreate('oh fuck', [{ id: 151 }]))
       expect(store.getState().failedCreations[0].error).toEqual('oh fuck')
       expect(store.getState().failedCreations[0].data.id).toEqual(151)
     })
@@ -257,8 +257,8 @@ describe('Creating', () => {
     xdescribe('when optimistic updates are enabled', () => {
 
       before(() => {
-        store.dispatch(testActions.createStart())
-        store.dispatch(testActions.createFailed('fuck'))
+        store.dispatch(testActions.pendCreation())
+        store.dispatch(testActions.failedToCreate('fuck'))
       })
 
       it('deletes the optimistically created items :(', () => {
@@ -270,8 +270,8 @@ describe('Creating', () => {
     xdescribe('when optimistic updates are not enabled', () => {
 
       before(() => {
-        store.dispatch(testActions.createStart())
-        store.dispatch(testActions.createFailed('fuck'))
+        store.dispatch(testActions.pendCreation())
+        store.dispatch(testActions.failedToCreate('fuck'))
       })
 
       it('does something, do not know yet', () => {
@@ -290,7 +290,7 @@ describe('Deleting', () => {
   beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
     store = createStore(reducer)
-    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+    store.dispatch(testActions.create([{ id:1 }, { id:2 }, { id:3 }]))
   })
 
   describe('Start', () => {
@@ -298,13 +298,13 @@ describe('Deleting', () => {
     describe('when an array of uniqueness parameter is given', () => {
 
       it('sets the status of the items to "deleting"', () => {
-        store.dispatch(testActions.deleteStart([2]))
+        store.dispatch(testActions.pendDeletion([2]))
         const deletedItem = find(store.getState().items, i => i.data.id === 2)
         expect(deletedItem.status).toBe("deleting")
       })
 
       it('does not modify the status of other items', () => {
-        store.dispatch(testActions.deleteStart([2]))
+        store.dispatch(testActions.pendDeletion([2]))
         const otherItem = find(store.getState().items, i => i.data.id === 1)
         expect(otherItem.status).toBe("success")
       })
@@ -318,7 +318,7 @@ describe('Deleting', () => {
     describe('when an array of uniqueness parameter is given', () => {
 
       it('deletes the items from the collection', () => {
-        store.dispatch(testActions.deleteSuccess([2]))
+        store.dispatch(testActions.delete([2]))
         const deletedItem = find(store.getState().items, i => i.data.id === 2)
         expect(deletedItem).toBe(undefined)
       })
@@ -329,9 +329,9 @@ describe('Deleting', () => {
 
       it('deletes the items from the collection', () => {
         const store = createStore(crudCollection('test'))
-        store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+        store.dispatch(testActions.create([{ id:1 }, { id:2 }, { id:3 }]))
         const firstCid = store.getState().items[0].cid
-        store.dispatch(testActions.deleteSuccess([firstCid]))
+        store.dispatch(testActions.delete([firstCid]))
         const deletedItem = find(store.getState().items, { cid: firstCid })
         expect(deletedItem).toBe(undefined)
       })
@@ -342,7 +342,7 @@ describe('Deleting', () => {
 
       it('deletes the items from the collection', () => {
         const firstItem = store.getState().items[0]
-        store.dispatch(testActions.deleteSuccess([firstItem]))
+        store.dispatch(testActions.delete([firstItem]))
         const deletedItem = find(store.getState().items, { cid: firstItem.cid })
         expect(deletedItem).toBe(undefined)
       })
@@ -353,7 +353,7 @@ describe('Deleting', () => {
 
       it('deletes the items from the collection', () => {
         const firstItem = store.getState().items[0].data
-        store.dispatch(testActions.deleteSuccess([firstItem]))
+        store.dispatch(testActions.delete([firstItem]))
         const deletedItem = find(store.getState().items, i => i.data.id === firstItem.id)
         expect(deletedItem).toBe(undefined)
       })
@@ -378,7 +378,7 @@ describe('Updating', () => {
   beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
     store = createStore(reducer)
-    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+    store.dispatch(testActions.create([{ id:1 }, { id:2 }, { id:3 }]))
   })
 
   describe('Start', () => {
@@ -388,7 +388,7 @@ describe('Updating', () => {
       describe('when optimistic is not set to true', () => {
 
         beforeEach(() => {
-          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
+          store.dispatch(testActions.pendUpdate([{ id: 1, modified: true }]))
         })
 
         it('sets the status of the items to "updating"', () => {
@@ -411,13 +411,13 @@ describe('Updating', () => {
       xdescribe('when optimistic is set to true', () => {
 
         it('sets the status of the item to "updating"', () => {
-          store.dispatch(testActions.updateStart([{ id: 1 }]))
+          store.dispatch(testActions.pendUpdate([{ id: 1 }]))
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
           expect(updatedItem.status).toEqual('updating')
         })
 
         it('modifies the data model', () => {
-          store.dispatch(testActions.updateStart([{ id: 1, modified: true }]))
+          store.dispatch(testActions.pendUpdate([{ id: 1, modified: true }]))
           const updatedItem = find(store.getState().items, (i) => i.data.id === 1)
           expect(updatedItem.data.modified).toEqual(true)
         })
@@ -433,7 +433,7 @@ describe('Updating', () => {
 
         beforeEach(() => {
           const firstCid = store.getState().items[0].cid
-          store.dispatch(testActions.updateStart([{ cid: firstCid, __cruddy: true, data: { modified: true } }]))
+          store.dispatch(testActions.pendUpdate([{ cid: firstCid, __cruddy: true, data: { modified: true } }]))
           updatedItem = find(store.getState().items, { cid: firstCid })
         })
 
@@ -457,7 +457,7 @@ describe('Updating', () => {
     describe('when no arguments are given', () => {
 
       beforeEach(() => {
-        store.dispatch(testActions.updateStart())
+        store.dispatch(testActions.pendUpdate())
       })
 
       it('sets the status of all items to "updating"', () => {
@@ -475,7 +475,7 @@ describe('Updating', () => {
 
       it('sets the status of the item to "success"', () => {
         const firstItem = store.getState().items[0]
-        store.dispatch(testActions.updateSuccess([firstItem]))
+        store.dispatch(testActions.update([firstItem]))
         const updatedItem = find(store.getState().items, { cid: firstItem.cid })
         expect(updatedItem.status).toEqual('success')
       })
@@ -483,7 +483,7 @@ describe('Updating', () => {
       it('modifies the data model', () => {
         const firstItem = store.getState().items[0]
         const newData = { id: firstItem.data.id, modified: true }
-        store.dispatch(testActions.updateSuccess([{ ...firstItem, data: newData }]))
+        store.dispatch(testActions.update([{ ...firstItem, data: newData }]))
         const updatedItem = find(store.getState().items, { cid: firstItem.cid })
         expect(updatedItem.data.modified).toEqual(true)
       })
@@ -491,8 +491,8 @@ describe('Updating', () => {
       it('overwrites the data model', () => {
         const firstItem = store.getState().items[0]
         const newData = { id: firstItem.data.id, notOverwritten: true }
-        store.dispatch(testActions.updateSuccess([{ ...firstItem, data: newData }]))
-        store.dispatch(testActions.updateSuccess([firstItem]))
+        store.dispatch(testActions.update([{ ...firstItem, data: newData }]))
+        store.dispatch(testActions.update([firstItem]))
         const updatedItem = find(store.getState().items, { cid: firstItem.cid })
         expect(updatedItem.data.notOverwritten).toEqual(undefined)
       })
@@ -503,8 +503,8 @@ describe('Updating', () => {
 
       it('sets the status of the items to "success"', () => {
         const firstData = store.getState().items[0].data
-        store.dispatch(testActions.updateStart([firstData]))
-        store.dispatch(testActions.updateSuccess([firstData]))
+        store.dispatch(testActions.pendUpdate([firstData]))
+        store.dispatch(testActions.update([firstData]))
         const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
         expect(updatedItem.status).toEqual('success')
       })
@@ -512,7 +512,7 @@ describe('Updating', () => {
       it('modifies the data model', () => {
         const firstData = store.getState().items[0].data
         const newData = { ...firstData, modified: true }
-        store.dispatch(testActions.updateSuccess([newData]))
+        store.dispatch(testActions.update([newData]))
         const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
         expect(updatedItem.data.modified).toEqual(true)
       })
@@ -520,8 +520,8 @@ describe('Updating', () => {
       it('overwrites the data model', () => {
         const firstData = store.getState().items[0].data
         const newData = { ...firstData, notOverwritten: true }
-        store.dispatch(testActions.updateSuccess([newData]))
-        store.dispatch(testActions.updateSuccess([firstData]))
+        store.dispatch(testActions.update([newData]))
+        store.dispatch(testActions.update([firstData]))
         const updatedItem = find(store.getState().items, (i) => i.data.id === firstData.id)
         expect(updatedItem.data.notOverwritten).toEqual(undefined)
       })
@@ -531,8 +531,8 @@ describe('Updating', () => {
     describe('when no arguments are given', () => {
 
       beforeEach(() => {
-        store.dispatch(testActions.updateStart())
-        store.dispatch(testActions.updateSuccess())
+        store.dispatch(testActions.pendUpdate())
+        store.dispatch(testActions.update())
       })
 
       it('sets the status of all items to "success"', () => {
@@ -547,7 +547,7 @@ describe('Updating', () => {
   describe('Error', () => {
     it('sets status to "error"', () => {
       const firstItem = store.getState().items[0]
-      store.dispatch(testActions.updateFailed('oh no'))
+      store.dispatch(testActions.failedToUpdate('oh no'))
       const updatedItem = find(store.getState().items, { cid: firstItem.cid })
       expect(updatedItem.status).toEqual('error')
       expect(updatedItem.error).toEqual('oh no')
@@ -562,7 +562,7 @@ describe('Empty', () => {
   beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
     store = createStore(reducer)
-    store.dispatch(testActions.createSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+    store.dispatch(testActions.create([{ id:1 }, { id:2 }, { id:3 }]))
   })
 
   it('empties the collection', () => {
@@ -577,7 +577,7 @@ describe('Invalidate', () => {
   beforeEach(() => {
     reducer = crudCollection('test', { uniqueBy: 'id' })
     store = createStore(reducer)
-    store.dispatch(testActions.fetchSuccess([{ id:1 }, { id:2 }, { id:3 }]))
+    store.dispatch(testActions.add([{ id:1 }, { id:2 }, { id:3 }]))
   })
 
   it('set the collections valid to false', () => {

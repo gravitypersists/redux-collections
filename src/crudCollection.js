@@ -19,11 +19,11 @@ export default function crudCollection(forType, options = {}) {
 
   const statusReducer = (state = 'none', action = {}) => {
     switch (action.type) {
-      case actions.fetchStart:
+      case actions.pend:
         return 'pending';
-      case actions.fetchSuccess:
+      case actions.add:
         return 'success';
-      case actions.fetchFailed:
+      case actions.failedToAdd:
         return 'error';
       default:
         return state;
@@ -32,7 +32,7 @@ export default function crudCollection(forType, options = {}) {
 
   const validReducer = (state = false, action = {}) => {
     switch (action.type) {
-      case actions.fetchSuccess:
+      case actions.add:
         return true;
       case actions.invalidate:
         return false;
@@ -43,11 +43,11 @@ export default function crudCollection(forType, options = {}) {
 
   const errorReducer = (state = null, action = {}) => {
     switch (action.type) {
-      case actions.fetchStart:
+      case actions.pend:
         return null;
-      case actions.fetchSuccess:
+      case actions.add:
         return null;
-      case actions.fetchFailed:
+      case actions.failedToAdd:
         return action.error;
       default:
         return state;
@@ -56,11 +56,11 @@ export default function crudCollection(forType, options = {}) {
 
   const creatingReducer = (state = 'success', action = {}) => {
     switch (action.type) {
-      case actions.createStart:
+      case actions.pendCreation:
         return 'pending';
-      case actions.createSuccess:
+      case actions.create:
         return 'success';
-      case actions.createFailed:
+      case actions.failedToCreate:
         return 'error';
       default:
         return state;
@@ -69,7 +69,7 @@ export default function crudCollection(forType, options = {}) {
 
   const failedCreationsReducer = (state = [], action = {}) => {
     switch (action.type) {
-      case actions.createFailed:
+      case actions.failedToCreate:
         return [...state, ...action.items.map(i => ({ data: i, error: action.error }))]
       default:
         return state.map(s => crudItem(s, action));
@@ -79,24 +79,24 @@ export default function crudCollection(forType, options = {}) {
   const itemsReducer = (state = [], action = {}) => {
     switch (action.type) {
 
-      case actions.fetchSuccess:
-      case actions.createSuccess:
+      case actions.add:
+      case actions.create:
         return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
 
-      case actions.deleteStart:
+      case actions.pendDeletion:
         return state.map(s => {
           const filterOut = (options.uniqueBy) ? s.data[options.uniqueBy] : s.cid;
           return (action.items.indexOf(filterOut) === -1) ? s : crudItem(s, action)
         })
 
-      case actions.deleteSuccess:
+      case actions.delete:
         return state.filter(s => {
           const filterOut = (options.uniqueBy) ? s.data[options.uniqueBy] : s.cid;
           return action.items.indexOf(filterOut) === -1
         });
 
-      case actions.updateStart:
-      case actions.updateSuccess:
+      case actions.pendUpdate:
+      case actions.update:
         if (action.noArgs) return state.map(s => crudItem(s, { ...action }));
         if (action.items.length === 0) return state;
         const cruddy = action.items[0].__cruddy;

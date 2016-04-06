@@ -23,10 +23,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var buildAction = function buildAction(actions, action) {
   switch (action) {
-    case actions.fetchFailed:
-    case actions.createFailed:
-    case actions.deleteFailed:
-    case actions.updateFailed:
+    case actions.failedToAdd:
+    case actions.failedToCreate:
+    case actions.failedToDelete:
+    case actions.failedToUpdate:
       return function () {
         var a = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
         var b = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
@@ -39,13 +39,13 @@ var buildAction = function buildAction(actions, action) {
         }
       };
 
-    case actions.fetchSuccess:
-    case actions.createStart:
-    case actions.createSuccess:
-    case actions.updateStart:
-    case actions.updateSuccess:
-    case actions.deleteStart:
-    case actions.deleteSuccess:
+    case actions.add:
+    case actions.pendCreation:
+    case actions.create:
+    case actions.pendUpdate:
+    case actions.update:
+    case actions.pendDeletion:
+    case actions.delete:
       return function () {
         var a = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
         var b = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];

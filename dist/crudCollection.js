@@ -46,11 +46,11 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.fetchStart:
+      case actions.pend:
         return 'pending';
-      case actions.fetchSuccess:
+      case actions.add:
         return 'success';
-      case actions.fetchFailed:
+      case actions.failedToAdd:
         return 'error';
       default:
         return state;
@@ -62,7 +62,7 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.fetchSuccess:
+      case actions.add:
         return true;
       case actions.invalidate:
         return false;
@@ -76,11 +76,11 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.fetchStart:
+      case actions.pend:
         return null;
-      case actions.fetchSuccess:
+      case actions.add:
         return null;
-      case actions.fetchFailed:
+      case actions.failedToAdd:
         return action.error;
       default:
         return state;
@@ -92,11 +92,11 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.createStart:
+      case actions.pendCreation:
         return 'pending';
-      case actions.createSuccess:
+      case actions.create:
         return 'success';
-      case actions.createFailed:
+      case actions.failedToCreate:
         return 'error';
       default:
         return state;
@@ -108,7 +108,7 @@ function crudCollection(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.createFailed:
+      case actions.failedToCreate:
         return [].concat(_toConsumableArray(state), _toConsumableArray(action.items.map(function (i) {
           return { data: i, error: action.error };
         })));
@@ -125,26 +125,26 @@ function crudCollection(forType) {
 
     switch (action.type) {
 
-      case actions.fetchSuccess:
-      case actions.createSuccess:
+      case actions.add:
+      case actions.create:
         return unique(mergeNew(state, action.items)).reverse().map(function (s) {
           return crudItem(s, action);
         });
 
-      case actions.deleteStart:
+      case actions.pendDeletion:
         return state.map(function (s) {
           var filterOut = options.uniqueBy ? s.data[options.uniqueBy] : s.cid;
           return action.items.indexOf(filterOut) === -1 ? s : crudItem(s, action);
         });
 
-      case actions.deleteSuccess:
+      case actions.delete:
         return state.filter(function (s) {
           var filterOut = options.uniqueBy ? s.data[options.uniqueBy] : s.cid;
           return action.items.indexOf(filterOut) === -1;
         });
 
-      case actions.updateStart:
-      case actions.updateSuccess:
+      case actions.pendUpdate:
+      case actions.update:
         if (action.noArgs) return state.map(function (s) {
           return crudItem(s, _extends({}, action));
         });

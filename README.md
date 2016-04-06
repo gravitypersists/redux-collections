@@ -48,11 +48,12 @@ a.failedToCreate(String)
 a.pendUpdate()
 a.update(Array)
 a.failedToUpdate(String)
-a.pendDelete()
+a.pendDeletion()
 a.delete(Array)
 a.failedToDelete(String)
 a.empty()
 a.replace(Array)
+a.invalidate()
 ```
 
 ### Reducers

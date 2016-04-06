@@ -21,18 +21,18 @@ function crudItem(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.updateStart:
+      case actions.pendUpdate:
         return 'updating';
-      case actions.updateSuccess:
+      case actions.update:
         return 'success';
-      case actions.updateFailed:
-        return 'error'
-      case actions.deleteStart:
+      case actions.failedToUpdate:
+        return 'error';
+      case actions.pendDeletion:
         return 'deleting';
-      case actions.deleteSuccess:
-        return 'success'
-      case actions.deleteFailed:
-        return 'error'
+      case actions.delete:
+        return 'success';
+      case actions.failedToDelete:
+        return 'error';
       default:
         return state;
     }
@@ -43,11 +43,11 @@ function crudItem(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.updateStart:
+      case actions.pendUpdate:
         return null;
-      case actions.updateSuccess:
+      case actions.update:
         return null;
-      case actions.updateFailed:
+      case actions.failedToUpdate:
         return action.error;
       default:
         return state;
@@ -59,7 +59,7 @@ function crudItem(forType) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     switch (action.type) {
-      case actions.updateSuccess:
+      case actions.update:
         if (action.noArgs) return state;
         return action.update;
       default:

@@ -5,18 +5,18 @@ exports.__esModule = true;
 exports.default = function (type) {
   var t = type.toUpperCase();
   return {
-    fetchStart: t + "_FETCH_START",
-    fetchSuccess: t + "_FETCH_SUCCESS",
-    fetchFailed: t + "_FETCH_FAILED",
-    createStart: t + "_CREATE_START",
-    createSuccess: t + "_CREATE_SUCCESS",
-    createFailed: t + "_CREATE_FAILED",
-    updateStart: t + "_UPDATE_START",
-    updateSuccess: t + "_UPDATE_SUCCESS",
-    updateFailed: t + "_UPDATE_FAILED",
-    deleteStart: t + "_DELETE_START",
-    deleteSuccess: t + "_DELETE_SUCCESS",
-    deleteFailed: t + "_DELETE_FAILED",
+    pend: t + "_FETCH_START",
+    add: t + "_FETCH_SUCCESS",
+    failedToAdd: t + "_FETCH_FAILED",
+    pendCreation: t + "_CREATE_START",
+    create: t + "_CREATE_SUCCESS",
+    failedToCreate: t + "_CREATE_FAILED",
+    pendUpdate: t + "_UPDATE_START",
+    update: t + "_UPDATE_SUCCESS",
+    failedToUpdate: t + "_UPDATE_FAILED",
+    pendDeletion: t + "_DELETE_START",
+    delete: t + "_DELETE_SUCCESS",
+    failedToDelete: t + "_DELETE_FAILED",
     empty: t + "_EMPTY",
     invalidate: t + "_INVALIDATE"
   };
