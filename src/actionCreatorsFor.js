@@ -23,6 +23,7 @@ const buildAction = (actions, action) => {
     case actions.update:
     case actions.pendDeletion:
     case actions.delete:
+    case actions.replace:
       return function(a = [], b = {}) {
         return { type: action, ...b, items: a, noArgs: a.length === 0 }
       }

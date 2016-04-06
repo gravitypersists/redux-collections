@@ -8,7 +8,8 @@ export default function crudCollection(forType, options = {}) {
   const crudItem = crudItemFor(forType)
 
   const unique = (items) => {
-    return options.uniqueBy ? uniqBy(items, (i) => i.data[options.uniqueBy]) : items;
+    return !options.uniqueBy ? items :
+      uniqBy(items, (i) => i.data ? i.data[options.uniqueBy] : i[options.uniqueBy]);
   }
 
   const mergeNew = (oldItems, newItems) => {
@@ -22,6 +23,7 @@ export default function crudCollection(forType, options = {}) {
       case actions.pend:
         return 'pending';
       case actions.add:
+      case actions.replace:
         return 'success';
       case actions.failedToAdd:
         return 'error';
@@ -33,6 +35,7 @@ export default function crudCollection(forType, options = {}) {
   const validReducer = (state = false, action = {}) => {
     switch (action.type) {
       case actions.add:
+      case actions.replace:
         return true;
       case actions.invalidate:
         return false;
@@ -46,6 +49,7 @@ export default function crudCollection(forType, options = {}) {
       case actions.pend:
         return null;
       case actions.add:
+      case actions.replace:
         return null;
       case actions.failedToAdd:
         return action.error;
@@ -82,6 +86,10 @@ export default function crudCollection(forType, options = {}) {
       case actions.add:
       case actions.create:
         return unique(mergeNew(state, action.items)).reverse().map(s => crudItem(s, action));
+
+      case actions.replace:
+        const newItems = unique(action.items.map(s => ({ data: s })))
+        return newItems.map(s => crudItem(s, action));
 
       case actions.pendDeletion:
         return state.map(s => {

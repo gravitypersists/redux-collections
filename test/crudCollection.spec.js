@@ -585,3 +585,41 @@ describe('Invalidate', () => {
     expect(store.getState().valid).toEqual(false);
   })
 })
+
+describe('Replace', () => {
+  let reducer, store
+
+  beforeEach(() => {
+    reducer = crudCollection('test', { uniqueBy: 'id' })
+    store = createStore(reducer)
+    store.dispatch(testActions.add([{ id:1 }, { id:2 }, { id:3 }]))
+  })
+
+  it('replaces the collections entirely with the new', () => {
+    const firstItem = store.getState().items[0].data;
+    store.dispatch(testActions.replace([{ id:5 }]));
+    const deletedItem = find(store.getState().items, i => i.data.id === firstItem.id);
+    expect(deletedItem).toBe(undefined);
+    const newItem = find(store.getState().items, i => i.data.id === 5);
+    expect(newItem).toNotBe(undefined);
+    expect(store.getState().items.length).toEqual(1);
+  })
+
+  it('sets the collections status to success', () => {
+    store.dispatch(testActions.pend());
+    store.dispatch(testActions.replace([]));
+    expect(store.getState().status).toEqual('success');
+  })
+
+  it('sets the collections valid to true', () => {
+    store.dispatch(testActions.invalidate());
+    store.dispatch(testActions.replace([]));
+    expect(store.getState().valid).toEqual(true);
+  })
+
+  it('sets the collections error to null', () => {
+    store.dispatch(testActions.failedToAdd());
+    store.dispatch(testActions.replace([]));
+    expect(store.getState().error).toEqual(null);
+  })
+})

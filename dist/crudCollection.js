@@ -28,9 +28,9 @@ function crudCollection(forType) {
   var crudItem = (0, _crudItem2.default)(forType);
 
   var unique = function unique(items) {
-    return options.uniqueBy ? (0, _lodash.uniqBy)(items, function (i) {
-      return i.data[options.uniqueBy];
-    }) : items;
+    return !options.uniqueBy ? items : (0, _lodash.uniqBy)(items, function (i) {
+      return i.data ? i.data[options.uniqueBy] : i[options.uniqueBy];
+    });
   };
 
   var mergeNew = function mergeNew(oldItems, newItems) {
@@ -49,6 +49,7 @@ function crudCollection(forType) {
       case actions.pend:
         return 'pending';
       case actions.add:
+      case actions.replace:
         return 'success';
       case actions.failedToAdd:
         return 'error';
@@ -63,6 +64,7 @@ function crudCollection(forType) {
 
     switch (action.type) {
       case actions.add:
+      case actions.replace:
         return true;
       case actions.invalidate:
         return false;
@@ -79,6 +81,7 @@ function crudCollection(forType) {
       case actions.pend:
         return null;
       case actions.add:
+      case actions.replace:
         return null;
       case actions.failedToAdd:
         return action.error;
@@ -128,6 +131,14 @@ function crudCollection(forType) {
       case actions.add:
       case actions.create:
         return unique(mergeNew(state, action.items)).reverse().map(function (s) {
+          return crudItem(s, action);
+        });
+
+      case actions.replace:
+        var newItems = unique(action.items.map(function (s) {
+          return { data: s };
+        }));
+        return newItems.map(function (s) {
           return crudItem(s, action);
         });
 

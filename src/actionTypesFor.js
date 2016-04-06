@@ -15,7 +15,8 @@ const types = [
   'delete',
   'failedToDelete',
   'empty',
-  'invalidate'
+  'invalidate',
+  'replace'
 ]
 
 const appendName = (forKeyword, accumulator, type) => {
