@@ -23,7 +23,6 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  console.log(state)
   return {
     todos: state.todos.items.map((i) => i.data)
   }
